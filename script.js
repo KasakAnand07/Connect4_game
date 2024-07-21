@@ -14,6 +14,7 @@ const boardElement = document.getElementById('board');
 const playerScoreElement = document.getElementById('playerScore');
 const computerScoreElement = document.getElementById('computerScore');
 
+// Initialize the board
 for (let r = 0; r < rows; r++) {
     board[r] = [];
     for (let c = 0; c < cols; c++) {
@@ -59,6 +60,13 @@ function handleCellClick(event) {
                 resetBoardWithDelay();
                 return;
             }
+            if (checkDraw()) {
+                showNotification('It\'s a draw!', 'info');
+                setTimeout(() => {
+                    resetBoard();
+                }, 3000);
+                return;
+            }
             currentPlayer = 'computer';
             setTimeout(computerMove, 500);
         }
@@ -83,6 +91,13 @@ function computerMove() {
             computerScore++;
             computerScoreElement.textContent = computerScore;
             resetBoardWithDelay();
+            return;
+        }
+        if (checkDraw()) {
+            showNotification('It\'s a draw!', 'info');
+            setTimeout(() => {
+                resetBoard();
+            }, 3000);
             return;
         }
         currentPlayer = 'player';
@@ -157,6 +172,15 @@ function checkWin(player) {
         }
     }
     return null;
+}
+
+function checkDraw() {
+    for (let c = 0; c < cols; c++) {
+        if (!board[0][c]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function drawWinLine(winPositions) {
